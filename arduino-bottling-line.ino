@@ -92,7 +92,7 @@ void setup() {
 
   uint8_t cappingTimeValue = avrEeprom.read8(CAPPING_TIME_EEPROM_ADDRESS);
   if (cappingTimeValue) {
-    onFillingTimeChange(cappingTimeValue);
+    onCappingTimeChange(cappingTimeValue);
     Serial.print("Found a capping time value: "); Serial.println(cappingTimeValue);
   }
 

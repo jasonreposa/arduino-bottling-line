@@ -67,8 +67,6 @@ void RotaryEncoderPCF8574::loop() {
 
      normalizeBounds();
 
-//     cappingTimeInMilliseconds = counter * 1000;
-     // map(counter, 0, CAPPING_UPPER_LIMIT_IN_SECONDS, 0, CAPPING_UPPER_LIMIT_IN_SECONDS * 1000); //Map value 0-25 to 0-100000
      Serial.print("Counter time: "); Serial.println(counter);
 
  //    Serial.print("Direction: ");
