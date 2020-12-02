@@ -1,7 +1,6 @@
 #include "CappingProcess.h"
 
 CappingProcess::CappingProcess() {
-  cappingButton = Bounce(); // pushbutton for Capping task
   ioExpander = ioFrom8574(0x20);
 }
 
@@ -34,7 +33,6 @@ void CappingProcess::setup() {
   digitalWrite(CAPPER_AIR_CYLINDER_RELAY_2, HIGH);
   pinMode(START_CAPPING_BUTTON, INPUT_PULLUP);
   digitalWrite(START_CAPPING_BUTTON, HIGH);
-  cappingButton.attach(START_CAPPING_BUTTON);
 }
 
 void CappingProcess::loop() {

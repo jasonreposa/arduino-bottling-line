@@ -1,7 +1,6 @@
 #ifndef CAPPING_PROCESS_H
 #define CAPPING_PROCESS_H
 
-#include <Bounce2.h>
 #include <elapsedMillis.h>
 
 #include <Wire.h>
@@ -17,8 +16,6 @@
 
 class CappingProcess : public SwitchListener {
   private:
-    Bounce cappingButton;
-
     // to handle button presses
     IoAbstractionRef ioExpander;
 
