@@ -2,11 +2,33 @@
 
 CappingProcess::CappingProcess() {
   cappingButton = Bounce(); // pushbutton for Capping task
+  ioExpander = ioFrom8574(0x20);
+}
+
+void CappingProcess::onPressed(uint8_t pin, bool held) {
+  // we wait to see if the operator is holding down the button
+  // to make sure we really should be doing the task
+  if (!emergencyStopCappingTriggered && held) {
+    if (inCappingProcess) {
+      emergencyStopCapping();
+    } else {
+      startCappingProcess();
+    }
+  }
+}
+
+// when a key is released this is called.
+void CappingProcess::onReleased(uint8_t pin, bool held) {
+  /* nothing */
 }
 
 void CappingProcess::setup() {
-  while(!Serial) {}
+  while(!Serial);
   Serial.begin(9600);
+
+  Wire.begin();
+  switches.initialise(ioFrom8574(0x20, 0), true); // pull up logic is optional, defaults to PULL_DOWN buttons.
+  switches.addSwitchListener(0, this);
 
   pinMode(CAPPER_AIR_CYLINDER_RELAY_2, OUTPUT);
   digitalWrite(CAPPER_AIR_CYLINDER_RELAY_2, HIGH);
@@ -16,8 +38,7 @@ void CappingProcess::setup() {
 }
 
 void CappingProcess::loop() {
-  // CAPPING
-  cappingButton.update();
+  taskManager.runLoop();
 
   // cool down emergency
   if (emergencyStopCappingTriggered && elapsedCappingTimer > EMERGENCY_STOP_CAPPING_COOL_DOWN) {
@@ -25,15 +46,7 @@ void CappingProcess::loop() {
   }
 
   if (inCappingProcess) {
-    if (cappingButton.fell()) {
-      emergencyStopCapping();
-    } else {
-      monitorCappingProcess();
-    }
-  } else if (cappingButton.fell() && !emergencyStopCappingTriggered) {
-    // if we haven't started capping, but the user pressed the cappingButton, start capping
-    // unless it was pressed due to emergency, then don't start the process again
-    startCappingProcess();
+    monitorCappingProcess();
   }
 }
 
