@@ -26,7 +26,7 @@ void RotaryEncoderPCF8574::normalizeBounds() {
   }
 }
 
-void RotaryEncoderPCF8574::setup() {
+void RotaryEncoderPCF8574::setup(uint8_t counterTimeValueFromEEPROM) {
   ioDevicePinMode(ioExpander, sw, INPUT_PULLUP);
   ioDevicePinMode(ioExpander, dt, INPUT_PULLUP);
   ioDevicePinMode(ioExpander, clk, INPUT_PULLUP);
@@ -34,6 +34,7 @@ void RotaryEncoderPCF8574::setup() {
   ioDeviceSync(ioExpander);
   lastStateCLK = ioDeviceDigitalRead(ioExpander, clk);
 
+  counter = counterTimeValueFromEEPROM;
   normalizeBounds();
 }
 

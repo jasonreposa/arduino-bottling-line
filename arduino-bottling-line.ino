@@ -30,6 +30,9 @@ IoAbstractionRef ioExpander = ioFrom8574(SECOND_EXPANSION_BOARD_ADDRESS);
 RotaryEncoderPCF8574 cappingTimeEncoder = RotaryEncoderPCF8574(ioExpander, 0, 1, 2);
 RotaryEncoderPCF8574 fillingTimeEncoder = RotaryEncoderPCF8574(ioExpander, 3, 4, 5);
 
+AvrEeprom avrEeprom;
+#define CAPPING_TIME_EEPROM_ADDRESS 0
+#define FILLING_TIME_EEPROM_ADDRESS 1
 
 void onCappingStartPressed(uint8_t pin, bool heldDown) {
   cappingProcess.onStartButtonPress(heldDown);
@@ -42,11 +45,15 @@ void onFillingStartPressed(uint8_t pin, bool heldDown) {
 void onCappingTimeChange(uint8_t newTime) {
   Serial.print("New Capping Time: "); Serial.println(newTime);
   cappingProcess.setCappingTime(newTime);
+  // write it to memory
+  avrEeprom.write8(CAPPING_TIME_EEPROM_ADDRESS, newTime);
 }
 
 void onFillingTimeChange(uint8_t newTime) {
   Serial.print("New Filling Time: "); Serial.println(newTime);
   fillingProcess.setFillingTime(newTime);
+  // write it to memory
+  avrEeprom.write8(FILLING_TIME_EEPROM_ADDRESS, newTime);
 }
 
 void setup() {
@@ -69,14 +76,28 @@ void setup() {
   // FILLING
   fillingProcess.setup();
   // rotary encoders
-  fillingTimeEncoder.setup();
+
+  uint8_t fillingTimeValue = avrEeprom.read8(FILLING_TIME_EEPROM_ADDRESS);
+  if (fillingTimeValue) {
+    onFillingTimeChange(fillingTimeValue);
+    Serial.print("Found a filling time value: "); Serial.println(fillingTimeValue);
+  }
+
+  fillingTimeEncoder.setup(fillingTimeValue);
   fillingTimeEncoder.setBounds(2, 50);
   fillingTimeEncoder.setCallback(onFillingTimeChange);
 
   // CAPPING
   cappingProcess.setup();
+
+  uint8_t cappingTimeValue = avrEeprom.read8(CAPPING_TIME_EEPROM_ADDRESS);
+  if (cappingTimeValue) {
+    onFillingTimeChange(cappingTimeValue);
+    Serial.print("Found a capping time value: "); Serial.println(cappingTimeValue);
+  }
+
   // rotary encoder
-  cappingTimeEncoder.setup();
+  cappingTimeEncoder.setup(cappingTimeValue);
   cappingTimeEncoder.setBounds(1, 25);
   cappingTimeEncoder.setCallback(onCappingTimeChange);
 }

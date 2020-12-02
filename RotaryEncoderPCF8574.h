@@ -30,7 +30,7 @@ class RotaryEncoderPCF8574 {
     void normalizeBounds();
   public:
     RotaryEncoderPCF8574(IoAbstractionRef /* ioExpander */, uint8_t /* sw */, uint8_t /* dt */, uint8_t /* clk */);
-    void setup();
+    void setup(uint8_t /* counterTimeValueFromEEPROM */);
     void loop();
     void setBounds(uint8_t /* lowerBound */, uint8_t /* upperBound */);
     void setCallback(TimeCallbackFn /* callback */);
