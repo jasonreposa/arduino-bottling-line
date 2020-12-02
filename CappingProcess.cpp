@@ -1,7 +1,6 @@
 #include "CappingProcess.h"
 
 CappingProcess::CappingProcess() {
-  ioExpander = ioFrom8574(0x20);
 }
 
 void CappingProcess::onPressed(uint8_t pin, bool held) {

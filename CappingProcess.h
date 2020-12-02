@@ -19,9 +19,6 @@
 
 class CappingProcess : public SwitchListener {
   private:
-    // to handle button presses
-    IoAbstractionRef ioExpander;
-
     elapsedMillis elapsedCappingTimer;
     unsigned long cappingTimeInMilliseconds = 1000;
     bool startedCapping = false;
