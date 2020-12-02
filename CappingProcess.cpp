@@ -26,13 +26,11 @@ void CappingProcess::setup() {
   Serial.begin(9600);
 
   Wire.begin();
-  switches.initialise(ioFrom8574(0x20, 0), true); // pull up logic is optional, defaults to PULL_DOWN buttons.
-  switches.addSwitchListener(0, this);
+  switches.initialise(ioFrom8574(START_CAPPING_BUTTON_ADDRESS, 0), true); // pull up logic is optional, defaults to PULL_DOWN buttons.
+  switches.addSwitchListener(START_CAPPING_BUTTON_PIN, this);
 
   pinMode(CAPPER_AIR_CYLINDER_RELAY_2, OUTPUT);
   digitalWrite(CAPPER_AIR_CYLINDER_RELAY_2, HIGH);
-  pinMode(START_CAPPING_BUTTON, INPUT_PULLUP);
-  digitalWrite(START_CAPPING_BUTTON, HIGH);
 }
 
 void CappingProcess::loop() {

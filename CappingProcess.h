@@ -10,7 +10,10 @@
 
 #define CAPPING_COOL_DOWN 5000
 #define CAPPER_AIR_CYLINDER_RELAY_2 A2
-#define START_CAPPING_BUTTON 8 // blue
+#define START_CAPPING_BUTTON_ADDRESS 0x20
+#define START_CAPPING_BUTTON_PIN 0 // blue
+
+// if the physical button is pressed again, emergency stop, then wait the alloted time below (ms)
 #define EMERGENCY_STOP_CAPPING_COOL_DOWN 5000
 
 
