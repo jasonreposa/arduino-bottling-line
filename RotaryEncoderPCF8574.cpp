@@ -57,11 +57,11 @@ void RotaryEncoderPCF8574::loop() {
      // If the DT state is different than the CLK state then
      // the encoder is rotating CCW so decrement
      if (currentStateDT != currentStateCLK) {
-       counter --;
+       counter -= resolution;
        currentDir ="CCW";
      } else {
        // Encoder is rotating CW so increment
-       counter ++;
+       counter += resolution;
        currentDir ="CW";
      }
 
@@ -95,5 +95,5 @@ void RotaryEncoderPCF8574::loop() {
      lastButtonPress = millis();
    }
 
-   delay(1);
+//   delay(1);
  }

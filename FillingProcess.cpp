@@ -15,10 +15,10 @@ void FillingProcess::onStartButtonPress(bool heldDown) {
   }
 }
 
-void FillingProcess::setFillingTime(uint8_t newTime) {
+void FillingProcess::setFillingTime(uint8_t newTimeInTenthsOfASecond) {
   // TODO: do sanity check
   // TODO: support one decimal for fine tuning
-  fillingTimeInMilliseconds = newTime * 1000;
+  fillingTimeInMilliseconds = newTimeInTenthsOfASecond * 100;
   Serial.print("New filling time: "); Serial.println(fillingTimeInMilliseconds);
 }
 

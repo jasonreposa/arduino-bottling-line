@@ -83,9 +83,10 @@ void setup() {
     Serial.print("Found a filling time value: "); Serial.println(fillingTimeValue);
   }
 
-  fillingTimeEncoder.setup(fillingTimeValue);
-  fillingTimeEncoder.setBounds(2, 50);
+  // in tenths of a second - two seconds is 20
+  fillingTimeEncoder.setBounds(20, 500);
   fillingTimeEncoder.setCallback(onFillingTimeChange);
+  fillingTimeEncoder.setup(fillingTimeValue);
 
   // CAPPING
   cappingProcess.setup();
@@ -97,9 +98,10 @@ void setup() {
   }
 
   // rotary encoder
-  cappingTimeEncoder.setup(cappingTimeValue);
-  cappingTimeEncoder.setBounds(1, 25);
+  // in tenths of a second - one second is 10
+  cappingTimeEncoder.setBounds(10, 250);
   cappingTimeEncoder.setCallback(onCappingTimeChange);
+  cappingTimeEncoder.setup(cappingTimeValue);
 }
 
 void loop() {

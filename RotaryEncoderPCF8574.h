@@ -12,14 +12,17 @@ typedef void(*TimeCallbackFn)(uint8_t newTime);
 
 class RotaryEncoderPCF8574 {
   private:
-    uint8_t counter = 0;
     uint8_t currentStateCLK;
     uint8_t currentStateDT;
     uint8_t lastStateCLK;
     String currentDir = "";
     unsigned long lastButtonPress = 0;
     uint8_t lowerBound = 0;
-    uint8_t upperBound = 25;
+    uint8_t upperBound = 100;
+
+    // in tenths of a second
+    uint8_t counter = 10;  // one second
+    uint8_t resolution = 5;  // half a second
 
     uint8_t sw;
     uint8_t dt;
