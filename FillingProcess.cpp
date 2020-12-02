@@ -1,19 +1,28 @@
 #include "FillingProcess.h"
 
 FillingProcess::FillingProcess() {
-  fillingButton = Bounce(); // pushbutton for Filling task
 }
 
+void FillingProcess::onStartButtonPress(bool heldDown) {
+  // we wait to see if the operator is holding down the button
+  // to make sure we really should be doing the task
+  if (!emergencyStopFillingTriggered && heldDown) {
+    if (inFillingProcess) {
+      emergencyStopFilling();
+    } else {
+      startFillingProcess();
+    }
+  }
+}
+
+// called from the main setup
 void FillingProcess::setup() {
-  while(!Serial) {}
+  while(!Serial);
   Serial.begin(9600);
 
   // air cylinder that moves filler heads up and down
   pinMode(FILLER_AIR_CYLINDER_RELAY_1, OUTPUT);
   digitalWrite(FILLER_AIR_CYLINDER_RELAY_1, HIGH);
-  pinMode(START_FILLING_BUTTON, INPUT_PULLUP);
-  digitalWrite(START_FILLING_BUTTON, HIGH);
-  fillingButton.attach(START_FILLING_BUTTON);
 
   // water valve that turns to allow transfer of beverage to bottle
   pinMode(BEVERAGE_FILLING_RELAY_3, OUTPUT);
@@ -24,27 +33,15 @@ void FillingProcess::setup() {
   digitalWrite(CO2_PURGING_RELAY_4, HIGH);
 }
 
+// called from the main loop
 void FillingProcess::loop() {
-  // FILLING
-  fillingButton.update();
-
   // cool down emergency
   if (emergencyStopFillingTriggered && elapsedFillingTimer > EMERGENCY_STOP_FILLING_COOL_DOWN) {
     fillingReset();
   }
 
   if (inFillingProcess) {
-    if (fillingButton.fell()) {
-      emergencyStopFilling();
-    } else {
-      // continue to monitor the process
-      monitorFillingProcess();
-    }
-
-  } else if (fillingButton.fell() && !emergencyStopFillingTriggered) {
-    // if we haven't started filling, but the user pressed the fillingButton, start filling
-    // unless it was pressed due to emergency, then don't start the process again
-    startFillingProcess();
+    monitorFillingProcess();
   }
 }
 

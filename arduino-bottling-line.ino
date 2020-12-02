@@ -1,7 +1,20 @@
 /*
-
+  Author: Jason Reposa
+  Created: 11-25-2020 (?)
 */
-// #include <IoAbstractionWire.h>
+#include <Wire.h>
+#include <IoAbstraction.h>
+#include <IoAbstractionWire.h>
+#include <TaskManagerIO.h>
+
+// custom constants for expansion boards and pin layout
+#define FIRST_EXPANSION_BOARD_ADDRESS 0x20
+#define SECOND_EXPANSION_BOARD_ADDRESS 0x21
+#define THIRD_EXPANSION_BOARD_ADDRESS 0x22
+
+// physical buttons to start the capping and filling process
+#define START_CAPPING_BUTTON_PIN 0 // first expansion board, blue button
+#define START_FILLING_BUTTON_PIN 1 // first expansion board, red button
 
 // custom libraries to support the bottling process
 #include "FillingProcess.h"
@@ -9,7 +22,6 @@ FillingProcess fillingProcess = FillingProcess();
 
 #include "CappingProcess.h"
 CappingProcess cappingProcess = CappingProcess();
-
 
 // ROTARY ENCODER
 #define CLK 4
@@ -22,9 +34,13 @@ String currentDir ="";
 unsigned long lastButtonPress = 0;
 #define CAPPING_UPPER_LIMIT_IN_SECONDS 25
 
-// PCF8574
-// IoAbstractionRef ioUsingArduino();
-// IoAbstractionRef ioExpander = ioFrom8574(0x20);
+void onCappingStartPressed(uint8_t pin, bool heldDown) {
+  cappingProcess.onStartButtonPress(heldDown);
+}
+
+void onFillingStartPressed(uint8_t pin, bool heldDown) {
+  fillingProcess.onStartButtonPress(heldDown);
+}
 
 void setup() {
   while(!Serial) {}
@@ -33,6 +49,16 @@ void setup() {
 
   Serial.println("------------------------------------");
   Serial.println("START");
+
+  Wire.begin();
+
+  // First we set up the switches library, giving it the task manager and tell it where the pins are located
+  // We could also of chosen IO through an i2c device that supports interrupts.
+  // the second parameter is a flag to use pull up switching, (true is pull up).
+  switches.initialise(ioFrom8574(FIRST_EXPANSION_BOARD_ADDRESS, 0), true);
+
+  switches.addSwitch(START_CAPPING_BUTTON_PIN, onCappingStartPressed);
+  switches.addSwitch(START_FILLING_BUTTON_PIN, onFillingStartPressed);
 
   // FILLING
   fillingProcess.setup();
@@ -49,10 +75,6 @@ void setup() {
   // Read the initial state of CLK
   lastStateCLK = digitalRead(CLK);
   counter = 0;//cappingTimeInMilliseconds / 1000;
-
-//  Wire.begin();
-//  ioDevicePinMode(ioExpander, 0, INPUT);
-
 }
 
 //int counterToTimeInMilliseconds(counter) {
@@ -123,7 +145,7 @@ void setup() {
 // }
 
 void loop() {
-  // taskManager.runLoop();
+  taskManager.runLoop();
 //  checkKnobs();
 
   fillingProcess.loop();
