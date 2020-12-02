@@ -15,6 +15,13 @@ void CappingProcess::onStartButtonPress(bool heldDown) {
   }
 }
 
+void CappingProcess::setCappingTime(uint8_t newTime) {
+  // TODO: do sanity check
+  // TODO: support one decimal for fine tuning
+  cappingTimeInMilliseconds = newTime * 1000;
+  Serial.print("New capping time: "); Serial.println(cappingTimeInMilliseconds);
+}
+
 // called from the main setup
 void CappingProcess::setup() {
   while(!Serial);
