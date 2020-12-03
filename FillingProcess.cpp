@@ -22,6 +22,20 @@ void FillingProcess::setFillingTime(uint8_t newTimeInTenthsOfASecond) {
   Serial.print("New filling time: "); Serial.println(fillingTimeInMilliseconds);
 }
 
+void FillingProcess::setLoweringTime(uint8_t newTimeInTenthsOfASecond) {
+  // TODO: do sanity check
+  // TODO: support one decimal for fine tuning
+  loweringTimeInMilliseconds = newTimeInTenthsOfASecond * 100;
+  Serial.print("New lowering time: "); Serial.println(loweringTimeInMilliseconds);
+}
+
+void FillingProcess::setPurgingTime(uint8_t newTimeInTenthsOfASecond) {
+  // TODO: do sanity check
+  // TODO: support one decimal for fine tuning
+  purgingTimeInMilliseconds = newTimeInTenthsOfASecond * 100;
+  Serial.print("New purging time: "); Serial.println(purgingTimeInMilliseconds);
+}
+
 // called from the main setup
 void FillingProcess::setup() {
   while(!Serial);
@@ -71,7 +85,7 @@ void FillingProcess::startLowering() {
   digitalWrite(FILLER_AIR_CYLINDER_RELAY_1, LOW);
   
   Serial.println("------------------------------------");
-  Serial.print("Start Lowering Filler for "); Serial.print(fillerLoweringTimeInMilliseconds); Serial.println(" ms");
+  Serial.print("Start Lowering Filler for "); Serial.print(loweringTimeInMilliseconds); Serial.println(" ms");
 }
 
 void FillingProcess::startPurging() {
@@ -148,11 +162,11 @@ void FillingProcess::monitorFillingProcess() {
   // if we've gone past the user controlled...
 
   // elapsed > loweringTime, purgingTime, fillingTime and cool down, allow the user to press the button again
-  if (elapsedFillingTimer > fillerLoweringTimeInMilliseconds + purgingTimeInMilliseconds + fillingTimeInMilliseconds + FILLING_COOL_DOWN) {
+  if (elapsedFillingTimer > loweringTimeInMilliseconds + purgingTimeInMilliseconds + fillingTimeInMilliseconds + FILLING_COOL_DOWN) {
     fillingReset();
 
   // elapsed > loweringTime, purgingTime and fillingTime, stop filling and start raising filler heads
-  } else if (elapsedFillingTimer > fillerLoweringTimeInMilliseconds + purgingTimeInMilliseconds + fillingTimeInMilliseconds) {
+  } else if (elapsedFillingTimer > loweringTimeInMilliseconds + purgingTimeInMilliseconds + fillingTimeInMilliseconds) {
 
     // gaurd these actions so they only occur once
     if (startedFilling && !startedRaising) {
@@ -161,7 +175,7 @@ void FillingProcess::monitorFillingProcess() {
     }
 
   // elapsed > loweringTime and purgingTime, stop purging and start filling
-  } else if (elapsedFillingTimer > fillerLoweringTimeInMilliseconds + purgingTimeInMilliseconds) {
+  } else if (elapsedFillingTimer > loweringTimeInMilliseconds + purgingTimeInMilliseconds) {
 
     // gaurd these actions so they only occur once
     if (startedPurging && !startedFilling) {
@@ -171,7 +185,7 @@ void FillingProcess::monitorFillingProcess() {
 
   // elapsed > loweringTime, start CO2 purge
   // which just means that loweringTime is just the amount of time to delay before opening up the ball valve to let in the CO2
-  } else if (elapsedFillingTimer > fillerLoweringTimeInMilliseconds) {
+  } else if (elapsedFillingTimer > loweringTimeInMilliseconds) {
 
     // gaurd this action so it only occurs once
     if (startedLowering && !startedPurging) {
