@@ -38,9 +38,6 @@ void FillingProcess::setPurgingTime(uint8_t newTimeInTenthsOfASecond) {
 
 // called from the main setup
 void FillingProcess::setup() {
-  while(!Serial);
-  Serial.begin(9600);
-
   // air cylinder that moves filler heads up and down
   pinMode(FILLER_AIR_CYLINDER_RELAY_1, OUTPUT);
   digitalWrite(FILLER_AIR_CYLINDER_RELAY_1, HIGH);

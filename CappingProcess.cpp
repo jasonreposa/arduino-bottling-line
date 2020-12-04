@@ -24,9 +24,6 @@ void CappingProcess::setCappingTime(uint8_t newTimeInTenthsOfASecond) {
 
 // called from the main setup
 void CappingProcess::setup() {
-  while(!Serial);
-  Serial.begin(9600);
-
   // set up air cylinder relay
   pinMode(CAPPER_AIR_CYLINDER_RELAY_2, OUTPUT);
   digitalWrite(CAPPER_AIR_CYLINDER_RELAY_2, HIGH);
