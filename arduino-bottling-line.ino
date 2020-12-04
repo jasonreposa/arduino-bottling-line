@@ -9,12 +9,6 @@
 #include <IoAbstractionWire.h>
 #include <TaskManagerIO.h>
 
-// for Nextion HMI display
-#define RX 0
-#define TX 1
-#include <SoftwareSerial.h>
-SoftwareSerial nextionSerial(RX, TX);
-
 // custom constants for expansion boards and pin layout
 #define FIRST_EXPANSION_BOARD_ADDRESS 0x20
 #define SECOND_EXPANSION_BOARD_ADDRESS 0x21
@@ -102,7 +96,11 @@ void HMI_setTimer(String hmiVariable, uint8_t newCappingTime) {
 }
 
 void setup() {
-  while(!Serial1);
+  // RX and TX on the pro micro
+  Serial1.begin(9600);
+  // wait 1 second for Serial1
+  while(!Serial1 && millis() < 1000);
+
   // Set up a faster baud for HMI -- DOESN'T WORK
 //  Serial1.print("baud=115200");
 //  Serial1.write(0xff);
@@ -110,11 +108,12 @@ void setup() {
 //  Serial1.write(0xff);
 //  Serial1.end();
 //  Serial1.begin(115200);
-  Serial1.begin(9600);
 
-  while(!Serial);
-
+  // these will kill non-computer connected loading
   Serial.begin(9600);
+  // wait another 1 second for Serial
+  // if you wait forever, the program won't start unless it's connected to a serial monitor
+  while(!Serial && millis() < 2000);
 
   Serial.println("------------------------------------");
   Serial.println("START");
