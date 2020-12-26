@@ -8,7 +8,7 @@
  * @param key the pin associated with the pin
  * @param heldDown if the button has been held down
  */ 
-typedef void(*TimeCallbackFn)(uint8_t newTime);
+typedef void(*TimeCallbackFn)(uint16_t newTime);
 
 class RotaryEncoderPCF8574 {
   private:
@@ -17,11 +17,11 @@ class RotaryEncoderPCF8574 {
     uint8_t lastStateCLK;
     String currentDir = "";
     unsigned long lastButtonPress = 0;
-    uint8_t lowerBound = 0;
-    uint8_t upperBound = 100;
+    uint16_t lowerBound = 0;
+    uint16_t upperBound = 100;
 
     // in tenths of a second
-    uint8_t counter = 10;  // one second
+    uint16_t counter = 10;  // one second
     uint8_t resolution = 5;  // half a second
 
     uint8_t sw;
@@ -33,9 +33,9 @@ class RotaryEncoderPCF8574 {
     void normalizeBounds();
   public:
     RotaryEncoderPCF8574(IoAbstractionRef /* ioExpander */, uint8_t /* sw */, uint8_t /* dt */, uint8_t /* clk */);
-    void setup(uint8_t /* counterTimeValueFromEEPROM */);
+    void setup(uint16_t /* counterTimeValueFromEEPROM */);
     void loop();
-    void setBounds(uint8_t /* lowerBound */, uint8_t /* upperBound */);
+    void setBounds(uint16_t /* lowerBound */, uint16_t /* upperBound */);
     void setCallback(TimeCallbackFn /* callback */);
   };
 

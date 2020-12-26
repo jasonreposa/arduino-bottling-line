@@ -7,7 +7,7 @@ RotaryEncoderPCF8574::RotaryEncoderPCF8574(IoAbstractionRef _ioExpander, uint8_t
   clk = _clk;
 }
 
-void RotaryEncoderPCF8574::setBounds(uint8_t _lowerBound, uint8_t _upperBound) {
+void RotaryEncoderPCF8574::setBounds(uint16_t _lowerBound, uint16_t _upperBound) {
   lowerBound = _lowerBound;
   upperBound = _upperBound;  
   normalizeBounds();
@@ -26,7 +26,7 @@ void RotaryEncoderPCF8574::normalizeBounds() {
   }
 }
 
-void RotaryEncoderPCF8574::setup(uint8_t counterTimeValueFromEEPROM) {
+void RotaryEncoderPCF8574::setup(uint16_t counterTimeValueFromEEPROM) {
   ioDevicePinMode(ioExpander, sw, INPUT_PULLUP);
   ioDevicePinMode(ioExpander, dt, INPUT_PULLUP);
   ioDevicePinMode(ioExpander, clk, INPUT_PULLUP);

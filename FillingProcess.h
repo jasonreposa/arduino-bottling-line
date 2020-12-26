@@ -54,9 +54,9 @@ class FillingProcess {
     void loop();
 
     void onStartButtonPress(bool /* heldDown */);
-    void setFillingTime(uint8_t /* newTime */);
-    void setLoweringTime(uint8_t /* newTime */);
-    void setPurgingTime(uint8_t /* newTime */);
+    void setFillingTime(uint16_t /* newTime */);
+    void setLoweringTime(uint16_t /* newTime */);
+    void setPurgingTime(uint16_t /* newTime */);
 };
 
 #endif

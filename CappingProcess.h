@@ -34,7 +34,7 @@ class CappingProcess {
     void loop();
 
     void onStartButtonPress(bool /* heldDown */);
-    void setCappingTime(uint8_t /* newTime */);
+    void setCappingTime(uint16_t /* newTime */);
 };
 
 #endif

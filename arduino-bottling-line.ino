@@ -37,9 +37,9 @@ RotaryEncoderPCF8574 purgingTimeEncoder = RotaryEncoderPCF8574(ioExpander2, 3, 4
 
 AvrEeprom avrEeprom;
 #define CAPPING_TIME_EEPROM_ADDRESS 0
-#define FILLING_TIME_EEPROM_ADDRESS 1
-#define LOWERING_TIME_EEPROM_ADDRESS 2
-#define PURGING_TIME_EEPROM_ADDRESS 3
+#define FILLING_TIME_EEPROM_ADDRESS 2
+#define LOWERING_TIME_EEPROM_ADDRESS 4
+#define PURGING_TIME_EEPROM_ADDRESS 6
 
 void onCappingStartPressed(uint8_t pin, bool heldDown) {
   cappingProcess.onStartButtonPress(heldDown);
@@ -49,44 +49,44 @@ void onFillingStartPressed(uint8_t pin, bool heldDown) {
   fillingProcess.onStartButtonPress(heldDown);
 }
 
-void onCappingTimeChange(uint8_t newTime) {
+void onCappingTimeChange(uint16_t newTime) {
   Serial.print("New Capping Time: "); Serial.println(newTime);
   cappingProcess.setCappingTime(newTime);
   // write it to memory
-  avrEeprom.write8(CAPPING_TIME_EEPROM_ADDRESS, newTime);
+  avrEeprom.write16(CAPPING_TIME_EEPROM_ADDRESS, newTime);
   // update interface
   HMI_setTimer("x0", newTime);
 }
 
-void onFillingTimeChange(uint8_t newTime) {
+void onFillingTimeChange(uint16_t newTime) {
   Serial.print("New Filling Time: "); Serial.println(newTime);
   fillingProcess.setFillingTime(newTime);
   // write it to memory
-  avrEeprom.write8(FILLING_TIME_EEPROM_ADDRESS, newTime);
+  avrEeprom.write16(FILLING_TIME_EEPROM_ADDRESS, newTime);
   // update interface
   HMI_setTimer("x1", newTime);
 }
 
-void onLoweringTimeChange(uint8_t newTime) {
+void onLoweringTimeChange(uint16_t newTime) {
   Serial.print("New Lowering Time: "); Serial.println(newTime);
   fillingProcess.setLoweringTime(newTime);
   // write it to memory
-  avrEeprom.write8(LOWERING_TIME_EEPROM_ADDRESS, newTime);
+  avrEeprom.write16(LOWERING_TIME_EEPROM_ADDRESS, newTime);
   // update interface
   HMI_setTimer("x2", newTime);
 }
 
-void onPurgingTimeChange(uint8_t newTime) {
+void onPurgingTimeChange(uint16_t newTime) {
   Serial.print("New Purging Time: "); Serial.println(newTime);
   fillingProcess.setPurgingTime(newTime);
   // write it to memory
-  avrEeprom.write8(PURGING_TIME_EEPROM_ADDRESS, newTime);
+  avrEeprom.write16(PURGING_TIME_EEPROM_ADDRESS, newTime);
   // update interface
   HMI_setTimer("x3", newTime);
 }
 
 // HMI functions
-void HMI_setTimer(String hmiVariable, uint8_t newCappingTime) {
+void HMI_setTimer(String hmiVariable, uint16_t newCappingTime) {
   Serial1.print(hmiVariable);
   Serial1.print(".val=");
   Serial1.print(newCappingTime);
@@ -99,21 +99,21 @@ void setup() {
   // RX and TX on the pro micro
   Serial1.begin(9600);
   // wait 1 second for Serial1
-  while(!Serial1 && millis() < 1000);
+  while (!Serial1 && millis() < 1000);
 
   // Set up a faster baud for HMI -- DOESN'T WORK
-//  Serial1.print("baud=115200");
-//  Serial1.write(0xff);
-//  Serial1.write(0xff);
-//  Serial1.write(0xff);
-//  Serial1.end();
-//  Serial1.begin(115200);
+  //  Serial1.print("baud=115200");
+  //  Serial1.write(0xff);
+  //  Serial1.write(0xff);
+  //  Serial1.write(0xff);
+  //  Serial1.end();
+  //  Serial1.begin(115200);
 
   // these will kill non-computer connected loading
   Serial.begin(9600);
   // wait another 1 second for Serial
   // if you wait forever, the program won't start unless it's connected to a serial monitor
-  while(!Serial && millis() < 2000);
+  while (!Serial && millis() < 2000);
 
   Serial.println("------------------------------------");
   Serial.println("START");
@@ -131,7 +131,7 @@ void setup() {
   fillingProcess.setup();
 
   // rotary encoders
-  uint8_t fillingTimeValue = avrEeprom.read8(FILLING_TIME_EEPROM_ADDRESS);
+  uint16_t fillingTimeValue = avrEeprom.read16(FILLING_TIME_EEPROM_ADDRESS);
   if (fillingTimeValue) {
     onFillingTimeChange(fillingTimeValue);
     Serial.print("Found a filling time value: "); Serial.println(fillingTimeValue);
@@ -143,7 +143,7 @@ void setup() {
   fillingTimeEncoder.setup(fillingTimeValue);
 
   // Filling Process - lowering
-  uint8_t loweringTimeValue = avrEeprom.read8(LOWERING_TIME_EEPROM_ADDRESS);
+  uint16_t loweringTimeValue = avrEeprom.read16(LOWERING_TIME_EEPROM_ADDRESS);
   if (loweringTimeValue) {
     onLoweringTimeChange(loweringTimeValue);
     Serial.print("Found a lowering time value: "); Serial.println(loweringTimeValue);
@@ -155,7 +155,7 @@ void setup() {
   loweringTimeEncoder.setup(loweringTimeValue);
 
   // Filling Process - purging
-  uint8_t purgingTimeValue = avrEeprom.read8(PURGING_TIME_EEPROM_ADDRESS);
+  uint16_t purgingTimeValue = avrEeprom.read16(PURGING_TIME_EEPROM_ADDRESS);
   if (purgingTimeValue) {
     onPurgingTimeChange(purgingTimeValue);
     Serial.print("Found a purging time value: "); Serial.println(purgingTimeValue);
@@ -169,7 +169,7 @@ void setup() {
   // CAPPING
   cappingProcess.setup();
 
-  uint8_t cappingTimeValue = avrEeprom.read8(CAPPING_TIME_EEPROM_ADDRESS);
+  uint16_t cappingTimeValue = avrEeprom.read16(CAPPING_TIME_EEPROM_ADDRESS);
   if (cappingTimeValue) {
     onCappingTimeChange(cappingTimeValue);
     Serial.print("Found a capping time value: "); Serial.println(cappingTimeValue);
@@ -187,9 +187,9 @@ void loop() {
   // 65 0 8 0 FF FF FF - Filling Start Button
   while (Serial1.available() > 0) {
     int serial_datum = Serial1.read();
-//    Serial.print(serial_datum);
-//    Serial.print(" - ");
-//    Serial.println(serial_datum, HEX);
+    //    Serial.print(serial_datum);
+    //    Serial.print(" - ");
+    //    Serial.println(serial_datum, HEX);
 
     // really unsafe. the data comes over one int at a time in the loop(),
     // so if we ever have a conflict with a number like 101, 255, 0 or a

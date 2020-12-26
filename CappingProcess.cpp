@@ -15,7 +15,7 @@ void CappingProcess::onStartButtonPress(bool heldDown) {
   }
 }
 
-void CappingProcess::setCappingTime(uint8_t newTimeInTenthsOfASecond) {
+void CappingProcess::setCappingTime(uint16_t newTimeInTenthsOfASecond) {
   // TODO: do sanity check
   // TODO: support one decimal for fine tuning
   cappingTimeInMilliseconds = newTimeInTenthsOfASecond * 100;
