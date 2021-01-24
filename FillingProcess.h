@@ -22,9 +22,9 @@ class FillingProcess {
     elapsedMillis elapsedFillingTimer;
 
     // sane defaults(?) - override with EEPROM
-    uint16_t loweringTimeInMilliseconds = 1000;
-    uint16_t purgingTimeInMilliseconds = 1000;
-    uint16_t fillingTimeInMilliseconds = 1000;
+    uint32_t loweringTimeInMilliseconds = 1000;
+    uint32_t purgingTimeInMilliseconds = 1000;
+    uint32_t fillingTimeInMilliseconds = 1000;
 
     // in order of operation
     bool startedLowering = false;
@@ -54,9 +54,9 @@ class FillingProcess {
     void loop();
 
     void onStartButtonPress(bool /* heldDown */);
-    void setFillingTime(uint16_t /* newTime */);
-    void setLoweringTime(uint16_t /* newTime */);
-    void setPurgingTime(uint16_t /* newTime */);
+    void setFillingTime(uint32_t /* newTime */);
+    void setLoweringTime(uint32_t /* newTime */);
+    void setPurgingTime(uint32_t /* newTime */);
 };
 
 #endif

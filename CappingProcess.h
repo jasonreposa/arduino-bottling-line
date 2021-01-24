@@ -14,7 +14,7 @@ class CappingProcess {
   private:
     elapsedMillis elapsedCappingTimer;
     // sane defaults(?) - override with EEPROM
-    uint16_t cappingTimeInMilliseconds = 1000;
+    uint32_t cappingTimeInMilliseconds = 1000;
     bool startedCapping = false;
     bool inCappingProcess = false;
     bool emergencyStopCappingTriggered = false;
@@ -34,7 +34,7 @@ class CappingProcess {
     void loop();
 
     void onStartButtonPress(bool /* heldDown */);
-    void setCappingTime(uint16_t /* newTime */);
+    void setCappingTime(uint32_t /* newTime */);
 };
 
 #endif

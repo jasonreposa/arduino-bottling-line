@@ -15,21 +15,21 @@ void FillingProcess::onStartButtonPress(bool heldDown) {
   }
 }
 
-void FillingProcess::setFillingTime(uint16_t newTimeInTenthsOfASecond) {
+void FillingProcess::setFillingTime(uint32_t newTimeInTenthsOfASecond) {
   // TODO: do sanity check
   // TODO: support one decimal for fine tuning
   fillingTimeInMilliseconds = newTimeInTenthsOfASecond * 100;
   Serial.print("New filling time: "); Serial.println(fillingTimeInMilliseconds);
 }
 
-void FillingProcess::setLoweringTime(uint16_t newTimeInTenthsOfASecond) {
+void FillingProcess::setLoweringTime(uint32_t newTimeInTenthsOfASecond) {
   // TODO: do sanity check
   // TODO: support one decimal for fine tuning
   loweringTimeInMilliseconds = newTimeInTenthsOfASecond * 100;
   Serial.print("New lowering time: "); Serial.println(loweringTimeInMilliseconds);
 }
 
-void FillingProcess::setPurgingTime(uint16_t newTimeInTenthsOfASecond) {
+void FillingProcess::setPurgingTime(uint32_t newTimeInTenthsOfASecond) {
   // TODO: do sanity check
   // TODO: support one decimal for fine tuning
   purgingTimeInMilliseconds = newTimeInTenthsOfASecond * 100;

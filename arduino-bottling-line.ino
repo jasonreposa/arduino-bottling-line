@@ -49,7 +49,7 @@ void onFillingStartPressed(uint8_t pin, bool heldDown) {
   fillingProcess.onStartButtonPress(heldDown);
 }
 
-void onCappingTimeChange(uint16_t newTime) {
+void onCappingTimeChange(uint32_t newTime) {
   Serial.print("New Capping Time: "); Serial.println(newTime);
   cappingProcess.setCappingTime(newTime);
   // write it to memory
@@ -58,7 +58,7 @@ void onCappingTimeChange(uint16_t newTime) {
   HMI_setTimer("x0", newTime);
 }
 
-void onFillingTimeChange(uint16_t newTime) {
+void onFillingTimeChange(uint32_t newTime) {
   Serial.print("New Filling Time: "); Serial.println(newTime);
   fillingProcess.setFillingTime(newTime);
   // write it to memory
@@ -67,7 +67,7 @@ void onFillingTimeChange(uint16_t newTime) {
   HMI_setTimer("x1", newTime);
 }
 
-void onLoweringTimeChange(uint16_t newTime) {
+void onLoweringTimeChange(uint32_t newTime) {
   Serial.print("New Lowering Time: "); Serial.println(newTime);
   fillingProcess.setLoweringTime(newTime);
   // write it to memory
@@ -76,7 +76,7 @@ void onLoweringTimeChange(uint16_t newTime) {
   HMI_setTimer("x2", newTime);
 }
 
-void onPurgingTimeChange(uint16_t newTime) {
+void onPurgingTimeChange(uint32_t newTime) {
   Serial.print("New Purging Time: "); Serial.println(newTime);
   fillingProcess.setPurgingTime(newTime);
   // write it to memory
@@ -86,7 +86,7 @@ void onPurgingTimeChange(uint16_t newTime) {
 }
 
 // HMI functions
-void HMI_setTimer(String hmiVariable, uint16_t newCappingTime) {
+void HMI_setTimer(String hmiVariable, uint32_t newCappingTime) {
   Serial1.print(hmiVariable);
   Serial1.print(".val=");
   Serial1.print(newCappingTime);
@@ -131,19 +131,19 @@ void setup() {
   fillingProcess.setup();
 
   // rotary encoders
-  uint16_t fillingTimeValue = avrEeprom.read16(FILLING_TIME_EEPROM_ADDRESS);
+  uint32_t fillingTimeValue = avrEeprom.read16(FILLING_TIME_EEPROM_ADDRESS);
   if (fillingTimeValue) {
     onFillingTimeChange(fillingTimeValue);
     Serial.print("Found a filling time value: "); Serial.println(fillingTimeValue);
   }
 
   // in tenths of a second - two seconds is 20
-  fillingTimeEncoder.setBounds(20, 500);
+  fillingTimeEncoder.setBounds(20, 1000);
   fillingTimeEncoder.setCallback(onFillingTimeChange);
   fillingTimeEncoder.setup(fillingTimeValue);
 
   // Filling Process - lowering
-  uint16_t loweringTimeValue = avrEeprom.read16(LOWERING_TIME_EEPROM_ADDRESS);
+  uint32_t loweringTimeValue = avrEeprom.read16(LOWERING_TIME_EEPROM_ADDRESS);
   if (loweringTimeValue) {
     onLoweringTimeChange(loweringTimeValue);
     Serial.print("Found a lowering time value: "); Serial.println(loweringTimeValue);
@@ -155,7 +155,7 @@ void setup() {
   loweringTimeEncoder.setup(loweringTimeValue);
 
   // Filling Process - purging
-  uint16_t purgingTimeValue = avrEeprom.read16(PURGING_TIME_EEPROM_ADDRESS);
+  uint32_t purgingTimeValue = avrEeprom.read16(PURGING_TIME_EEPROM_ADDRESS);
   if (purgingTimeValue) {
     onPurgingTimeChange(purgingTimeValue);
     Serial.print("Found a purging time value: "); Serial.println(purgingTimeValue);
@@ -169,7 +169,7 @@ void setup() {
   // CAPPING
   cappingProcess.setup();
 
-  uint16_t cappingTimeValue = avrEeprom.read16(CAPPING_TIME_EEPROM_ADDRESS);
+  uint32_t cappingTimeValue = avrEeprom.read16(CAPPING_TIME_EEPROM_ADDRESS);
   if (cappingTimeValue) {
     onCappingTimeChange(cappingTimeValue);
     Serial.print("Found a capping time value: "); Serial.println(cappingTimeValue);
