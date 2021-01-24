@@ -37,9 +37,9 @@ RotaryEncoderPCF8574 purgingTimeEncoder = RotaryEncoderPCF8574(ioExpander2, 3, 4
 
 AvrEeprom avrEeprom;
 #define CAPPING_TIME_EEPROM_ADDRESS 0
-#define FILLING_TIME_EEPROM_ADDRESS 2
-#define LOWERING_TIME_EEPROM_ADDRESS 4
-#define PURGING_TIME_EEPROM_ADDRESS 6
+#define FILLING_TIME_EEPROM_ADDRESS 4
+#define LOWERING_TIME_EEPROM_ADDRESS 8
+#define PURGING_TIME_EEPROM_ADDRESS 12
 
 void onCappingStartPressed(uint8_t pin, bool heldDown) {
   cappingProcess.onStartButtonPress(heldDown);
