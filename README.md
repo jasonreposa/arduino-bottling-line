@@ -4,6 +4,8 @@ Hacked together Object Oriented Arduino code to use for a bottling line. Make yo
 
 See video: [reddit post in r/arduino](https://www.reddit.com/r/arduino/comments/ouw0ar/bottling_machine_i_built_back_in_2020/)
 
+Updated walkthrough with some instruction: https://www.youtube.com/watch?v=DvNhkyJ3Bsc
+
 ## parts list
 - beverage safe tubing
 - beverage container (I'm using a 5 gallon corny keg in the video)
